@@ -1,0 +1,21 @@
+{
+  "name": "meiosis-explorer",
+  "version": "1.0.0",
+  "description": "Interactive 3D educational website for learning meiosis",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "meiosis",
+    "education",
+    "biology",
+    "3d",
+    "interactive",
+    "science"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+

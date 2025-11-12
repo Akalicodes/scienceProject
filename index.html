@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meiosis Explorer - Interactive 3D Journey</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-glass">
+        <div class="logo">Meiosis Explorer</div>
+        <div class="nav-links">
+            <a href="#hero">Home</a>
+            <a href="#phases">Phases</a>
+            <a href="#quiz">Quiz</a>
+        </div>
+        <div class="phase-indicator">Phase <span id="current-phase">0</span>/11</div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="glow-text">Meiosis</span><br>
+                The Journey of Life
+            </h1>
+            <p class="hero-subtitle">
+                Ever wonder why you look different from your siblings? It's all because of meiosis!
+                Let's explore this amazing process with cool 3D models you can spin and zoom.
+            </p>
+            <button class="cta-button" onclick="scrollToPhases()">
+                Begin Journey
+                <span class="arrow">→</span>
+            </button>
+        </div>
+        <div class="hero-visual" id="hero-canvas"></div>
+    </section>
+
+    <!-- PMAT Mnemonic Section -->
+    <section class="pmat-section">
+        <div class="pmat-container glass-panel">
+            <div class="pmat-emoji">☕</div>
+            <h2 class="pmat-title">Remember: <span class="glow-text">PMAT</span></h2>
+            <p class="pmat-subtitle">People Meet At Timmies</p>
+            <div class="pmat-breakdown">
+                <div class="pmat-item">
+                    <span class="pmat-letter">P</span>
+                    <span class="pmat-word">Prophase</span>
+                </div>
+                <div class="pmat-item">
+                    <span class="pmat-letter">M</span>
+                    <span class="pmat-word">Metaphase</span>
+                </div>
+                <div class="pmat-item">
+                    <span class="pmat-letter">A</span>
+                    <span class="pmat-word">Anaphase</span>
+                </div>
+                <div class="pmat-item">
+                    <span class="pmat-letter">T</span>
+                    <span class="pmat-word">Telophase</span>
+                </div>
+            </div>
+            <p class="pmat-note">💡 This pattern repeats twice in meiosis: PMAT I, then PMAT II!</p>
+        </div>
+    </section>
+
+    <!-- Phase Sections -->
+    <div id="phases" class="phases-container">
+        
+        <!-- Interphase -->
+        <section class="phase-section" data-phase="1">
+            <div class="phase-content">
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">01</span>
+                    <h2 class="phase-title">Interphase</h2>
+                    <p class="phase-description">
+                        The cell gets ready for division. It copies all its DNA (like making a backup). 
+                        Each chromosome now has a twin copy called a sister chromatid. The cell also 
+                        grows bigger and makes the proteins it needs.
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">DNA Replication</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Result:</span>
+                            <span class="fact-value">Sister Chromatids Form</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('interphase')">Learn More</button>
+                </div>
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-interphase"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prophase I -->
+        <section class="phase-section" data-phase="2">
+            <div class="phase-content reverse">
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-prophase1"></div>
+                </div>
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">02</span>
+                    <h2 class="phase-title">Prophase I</h2>
+                    <p class="phase-description">
+                        Matching chromosomes (one from mom, one from dad) pair up side by side. While paired, 
+                        they swap some DNA pieces with each other. This is called crossing over, and it's 
+                        why you're unique!
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Crossing Over</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Result:</span>
+                            <span class="fact-value">Genetic Variation</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('prophase1')">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metaphase I -->
+        <section class="phase-section" data-phase="3">
+            <div class="phase-content">
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">03</span>
+                    <h2 class="phase-title">Metaphase I</h2>
+                    <p class="phase-description">
+                        The chromosome pairs line up in the middle of the cell (like lining up for a race). 
+                        Spindle fibers (think: ropes) attach to them and get ready to pull them apart.
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Chromosome Alignment</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Structure:</span>
+                            <span class="fact-value">Metaphase Plate</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('metaphase1')">Learn More</button>
+                </div>
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-metaphase1"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Anaphase I -->
+        <section class="phase-section" data-phase="4">
+            <div class="phase-content reverse">
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-anaphase1"></div>
+                </div>
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">04</span>
+                    <h2 class="phase-title">Anaphase I</h2>
+                    <p class="phase-description">
+                        The chromosome pairs split up! One from each pair goes to opposite sides of the cell.  
+                        Note: The twin copies (sister chromatids) still stick together for now.
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Homolog Separation</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Important:</span>
+                            <span class="fact-value">Reduction Division</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('anaphase1')">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Telophase I -->
+        <section class="phase-section" data-phase="5">
+            <div class="phase-content">
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">05</span>
+                    <h2 class="phase-title">Telophase I</h2>
+                    <p class="phase-description">
+                        The chromosomes reach opposite ends of the cell. Nuclear membranes might form 
+                        around them again (like putting them in bubbles). The cell gets ready to split in two.
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Chromosome Decondensation</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Next:</span>
+                            <span class="fact-value">Cytokinesis I</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('telophase1')">Learn More</button>
+                </div>
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-telophase1"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cytokinesis I -->
+        <section class="phase-section" data-phase="6">
+            <div class="phase-content reverse">
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-cytokinesis1"></div>
+                </div>
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">06</span>
+                    <h2 class="phase-title">Cytokinesis I</h2>
+                    <p class="phase-description">
+                        The cell actually splits into two! Each new cell has HALF the number of chromosomes 
+                        as before. But remember: each chromosome is still doubled (twin copies stuck together). 
+                        That's why we need a second division!
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Cell Division</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Result:</span>
+                            <span class="fact-value">Two Haploid Cells (2n→n)</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Chromosome State:</span>
+                            <span class="fact-value">Still Duplicated</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('cytokinesis1')">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interkinesis -->
+        <section class="phase-section" data-phase="7">
+            <div class="phase-content">
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">07</span>
+                    <h2 class="phase-title">Interkinesis</h2>
+                    <p class="phase-description">
+                        Time for a quick break between round 1 and round 2! IMPORTANT: The DNA does NOT 
+                        copy itself again (unlike before round 1). The cells just rest a bit. If DNA copied 
+                        here, we'd mess up the whole process!
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Duration:</span>
+                            <span class="fact-value">Brief Rest Period</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">DNA Replication:</span>
+                            <span class="fact-value">NONE ❌</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Purpose:</span>
+                            <span class="fact-value">Prepare for Meiosis II</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('interkinesis')">Learn More</button>
+                </div>
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-interkinesis"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prophase II -->
+        <section class="phase-section" data-phase="8">
+            <div class="phase-content reverse">
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-prophase2"></div>
+                </div>
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">08</span>
+                    <h2 class="phase-title">Prophase II</h2>
+                    <p class="phase-description">
+                        Round 2 begins! New spindle fibers form in BOTH cells. The chromosomes tighten up again, 
+                        and the nuclear membrane disappears (if it came back).
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Spindle Formation</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Note:</span>
+                            <span class="fact-value">No DNA Replication</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('prophase2')">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metaphase II -->
+        <section class="phase-section" data-phase="9">
+            <div class="phase-content">
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">09</span>
+                    <h2 class="phase-title">Metaphase II</h2>
+                    <p class="phase-description">
+                        The chromosomes line up in the middle again (in both cells). This time, the spindle 
+                        fibers are going to separate the twin copies from each other.
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Chromosome Alignment</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Similar to:</span>
+                            <span class="fact-value">Mitosis Metaphase</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('metaphase2')">Learn More</button>
+                </div>
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-metaphase2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Anaphase II -->
+        <section class="phase-section" data-phase="10">
+            <div class="phase-content reverse">
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-anaphase2"></div>
+                </div>
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">10</span>
+                    <h2 class="phase-title">Anaphase II</h2>
+                    <p class="phase-description">
+                        The twin copies FINALLY separate! They get pulled to opposite sides of each cell. 
+                        Once they separate, we stop calling them "sister chromatids" and just call them chromosomes.
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Chromatid Separation</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Result:</span>
+                            <span class="fact-value">Individual Chromosomes</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('anaphase2')">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Telophase II + Cytokinesis II -->
+        <section class="phase-section" data-phase="11">
+            <div class="phase-content">
+                <div class="phase-info glass-panel">
+                    <span class="phase-number">11</span>
+                    <h2 class="phase-title">Telophase II + Cytokinesis II</h2>
+                    <p class="phase-description">
+                        The grand finale! Nuclear membranes form around all four groups of chromosomes. 
+                        The cells split one more time. Result: FOUR unique cells (sperm or egg cells)! 
+                        Each one is different thanks to all that mixing and splitting!
+                    </p>
+                    <div class="phase-facts">
+                        <div class="fact-item">
+                            <span class="fact-label">Key Event:</span>
+                            <span class="fact-value">Final Division</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-label">Result:</span>
+                            <span class="fact-value">4 Unique Gametes</span>
+                        </div>
+                    </div>
+                    <button class="info-btn" onclick="showPopup('telophase2')">Learn More</button>
+                </div>
+                <div class="phase-visual">
+                    <div class="canvas-container" id="canvas-telophase2"></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Genetic Variation Section -->
+    <section class="genetics-section">
+        <div class="genetics-container">
+            <h2 class="section-title"><span class="glow-text">Genetic Variation</span> Explained</h2>
+            
+            <div class="genetics-grid">
+                <!-- Crossing Over -->
+                <div class="genetics-card glass-panel">
+                    <div class="genetics-icon">🔀</div>
+                    <h3 class="genetics-card-title">Crossing Over</h3>
+                    <div class="genetics-content">
+                        <h4>How It Works:</h4>
+                        <p>
+                            In <strong>Prophase I</strong>, matching chromosomes (one from mom, one from dad) line up 
+                            next to each other. While they're touching, they swap pieces of DNA! It's like trading 
+                            cards—they exchange genetic information.
+                        </p>
+                        <h4>Why It Happens:</h4>
+                        <p>
+                            <strong>The Point:</strong> Makes new combinations of traits. Without crossing over, you'd 
+                            get all of mom's traits on one chromosome OR all of dad's—no mix! This mixing makes you unique.
+                        </p>
+                        <p>
+                            <strong>Why It Matters:</strong> More variety means species can adapt better when things change. 
+                            It's also why you and your siblings look different (unless you're identical twins)!
+                        </p>
+                        <div class="genetics-stat">
+                            <span class="stat-number">2-3</span>
+                            <span class="stat-label">crossover events per chromosome pair</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Independent Assortment -->
+                <div class="genetics-card glass-panel">
+                    <div class="genetics-icon">🎲</div>
+                    <h3 class="genetics-card-title">Independent Assortment</h3>
+                    <div class="genetics-content">
+                        <h4>How It Works:</h4>
+                        <p>
+                            In <strong>Metaphase I</strong>, chromosome pairs line up in the middle—but which way they face 
+                            is totally random! Mom's or dad's chromosome can face either direction. When they split apart, 
+                            it's like flipping a coin for each pair. Totally by chance!
+                        </p>
+                        <h4>Why It Happens:</h4>
+                        <p>
+                            <strong>The Point:</strong> Makes sure each sperm or egg gets a random mix of mom and dad 
+                            chromosomes. This is one of Mendel's laws!
+                        </p>
+                        <p>
+                            <strong>Why It Matters:</strong> Creates TONS of variety! Humans have 23 chromosome pairs. 
+                            With independent assortment, that means over 8 MILLION different possible combinations! 
+                            That's a lot of variety!
+                        </p>
+                        <div class="genetics-stat">
+                            <span class="stat-number">8.4 Million+</span>
+                            <span class="stat-label">possible chromosome combinations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="genetics-summary glass-panel">
+                <h3>🧬 Combined Power</h3>
+                <p>
+                    When you mix crossing over AND independent assortment together, you can make over 
+                    <strong>70 TRILLION</strong> different sperm or egg cells! Then when a sperm meets an egg, 
+                    the combinations are basically endless. This is why you're one-of-a-kind—and why evolution 
+                    and adaptation work!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meiosis vs Mitosis Comparison -->
+    <section class="comparison-section">
+        <div class="comparison-container">
+            <h2 class="section-title"><span class="glow-text">Meiosis</span> vs <span class="glow-text">Mitosis</span></h2>
+            <p class="section-subtitle">Two types of cell division with different purposes</p>
+            
+            <div class="comparison-grid">
+                <!-- Meiosis Card -->
+                <div class="comparison-card glass-panel">
+                    <h3 class="comparison-title" style="color: var(--primary);">Meiosis</h3>
+                    
+                    <div class="comparison-item">
+                        <h4>📍 Where It Happens</h4>
+                        <p><strong>Only in sex organs</strong></p>
+                        <ul>
+                            <li>Testes (males) make sperm</li>
+                            <li>Ovaries (females) make eggs</li>
+                            <li>Nowhere else in your body!</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h4>🎯 Why It Happens</h4>
+                        <p><strong>To make babies</strong></p>
+                        <ul>
+                            <li>Makes sperm and egg cells</li>
+                            <li>Cuts chromosome number in half</li>
+                            <li>Creates variety (everyone's different!)</li>
+                            <li>Lets species change and evolve</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h4>🔢 What You Get</h4>
+                        <p><strong>4 unique cells with half the chromosomes</strong></p>
+                        <ul>
+                            <li>Number: 4 cells</li>
+                            <li>Chromosomes: Half (23 instead of 46)</li>
+                            <li>Uniqueness: All 4 are different!</li>
+                            <li>Function: Sperm or egg cells</li>
+                            <li>Humans: 46 → 23 chromosomes</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h4>⚙️ Process</h4>
+                        <ul>
+                            <li>Two divisions (Meiosis I & II)</li>
+                            <li>Crossing over occurs</li>
+                            <li>Independent assortment</li>
+                            <li>Homologous pairs separate</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Mitosis Card -->
+                <div class="comparison-card glass-panel">
+                    <h3 class="comparison-title" style="color: var(--secondary);">Mitosis</h3>
+                    
+                    <div class="comparison-item">
+                        <h4>📍 Where It Happens</h4>
+                        <p><strong>Everywhere in your body</strong></p>
+                        <ul>
+                            <li>All body parts and organs</li>
+                            <li>Skin, muscles, bones, organs</li>
+                            <li>Basically everywhere EXCEPT sex organs</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h4>🎯 Why It Happens</h4>
+                        <p><strong>Growth and fixing injuries</strong></p>
+                        <ul>
+                            <li>Helps you grow bigger</li>
+                            <li>Heals cuts and injuries</li>
+                            <li>Replaces dead or damaged cells</li>
+                            <li>Some simple organisms use it to make babies</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h4>🔢 What You Get</h4>
+                        <p><strong>2 identical cells with full chromosomes</strong></p>
+                        <ul>
+                            <li>Number: 2 cells</li>
+                            <li>Chromosomes: Full set (46 stays 46)</li>
+                            <li>Uniqueness: Exact copies (clones!)</li>
+                            <li>Function: Regular body cells</li>
+                            <li>Humans: 46 → 46 chromosomes</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item">
+                        <h4>⚙️ Process</h4>
+                        <ul>
+                            <li>One division only</li>
+                            <li>No crossing over</li>
+                            <li>No independent assortment</li>
+                            <li>Sister chromatids separate</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-summary glass-panel">
+                <h3>🔑 Remember This!</h3>
+                <p>
+                    <strong>Mitosis</strong> = Makes exact copies for growing and healing. <br>
+                    <strong>Meiosis</strong> = Makes unique sperm/egg cells for making babies. <br><br>
+                    Both are super important! Mitosis keeps you alive and healthy. Meiosis makes sure 
+                    every kid is unique and different!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="quiz-section">
+        <div class="quiz-container glass-panel">
+            <h2 class="quiz-title">Test Your Knowledge</h2>
+            <p class="quiz-subtitle">Let's see how well you understand meiosis! (11 questions)</p>
+            
+            <div id="quiz-content" class="quiz-content">
+                <!-- Quiz questions will be inserted here -->
+            </div>
+
+            <div class="quiz-navigation">
+                <button class="quiz-btn" id="prev-btn" onclick="previousQuestion()">Previous</button>
+                <span class="question-indicator" id="question-indicator">Question 1 of 11</span>
+                <button class="quiz-btn primary" id="next-btn" onclick="nextQuestion()">Next</button>
+            </div>
+
+            <div id="quiz-results" class="quiz-results hidden">
+                <div class="results-content">
+                    <h3 class="results-title">Congratulations! 🎉</h3>
+                    <div class="score-display">
+                        <span class="score-value" id="score-value">0</span>
+                        <span class="score-total">/ 11</span>
+                    </div>
+                    <p class="results-message" id="results-message"></p>
+                    <button class="cta-button" onclick="restartQuiz()">Retake Quiz</button>
+                    <button class="cta-button secondary" onclick="scrollToTop()">Back to Top</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Popup -->
+    <div id="info-popup" class="popup-overlay hidden">
+        <div class="popup-content glass-panel">
+            <button class="popup-close" onclick="closePopup()">×</button>
+            <div id="popup-body"></div>
+        </div>
+    </div>
+
+    <!-- Sound Toggle -->
+    <button class="sound-toggle" id="sound-toggle" title="Toggle Sound">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path id="sound-waves" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+    <script src="meiosis3d.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
