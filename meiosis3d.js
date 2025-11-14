@@ -1,7 +1,28 @@
-// 3D Visualization using Three.js
+/**
+ * ============================================================================
+ * MEIOSIS EXPLORER - 3D VISUALIZATION ENGINE
+ * ============================================================================
+ * Three.js based 3D visualization system for rendering interactive meiosis phases
+ * 
+ * Features:
+ * - Interactive 3D models of chromosomes, cells, and cellular structures
+ * - Mouse and touch controls for rotation and zoom
+ * - Hover detection with informative labels
+ * - Optimized for both desktop and mobile devices
+ * - 11 phase-specific scenes showing the complete meiosis process
+ * ============================================================================
+ */
+
+// ============================================================================
+// GLOBAL SCENE STORAGE
+// Stores all active Three.js scenes for lifecycle management
+// ============================================================================
 window.meiosisScenes = {};
 
-// Polyfill for CapsuleGeometry if not available
+// ============================================================================
+// POLYFILLS & COMPATIBILITY
+// CapsuleGeometry polyfill for older Three.js versions
+// ============================================================================
 if (typeof THREE.CapsuleGeometry === 'undefined') {
     THREE.CapsuleGeometry = function(radius, length, capSegments, radialSegments) {
         THREE.BufferGeometry.call(this);
@@ -75,7 +96,17 @@ if (typeof THREE.CapsuleGeometry === 'undefined') {
     THREE.CapsuleGeometry.prototype.constructor = THREE.CapsuleGeometry;
 }
 
-// Utility function to create chromosome materials
+// ============================================================================
+// MATERIAL CREATION UTILITIES
+// Factory functions for creating consistent materials across the application
+// ============================================================================
+
+/**
+ * Creates a glowing material for chromosomes
+ * @param {number} color - Base color (hex)
+ * @param {number} glowColor - Emissive glow color (hex)
+ * @returns {THREE.MeshPhongMaterial} Configured material with glow effect
+ */
 function createChromosomeMaterial(color, glowColor) {
     return new THREE.MeshPhongMaterial({
         color: color,
@@ -86,7 +117,19 @@ function createChromosomeMaterial(color, glowColor) {
     });
 }
 
-// Create a chromosome (X-shape representing sister chromatids)
+// ============================================================================
+// 3D MODEL CREATION FUNCTIONS
+// Complex geometry builders for biological structures
+// ============================================================================
+
+/**
+ * Creates a complete chromosome with sister chromatids, centromere, and kinetochores
+ * @param {number} color - Chromosome color
+ * @param {number} glowColor - Glow color for emission
+ * @param {THREE.Vector3} position - Position in 3D space
+ * @param {number} scale - Size multiplier (default: 1)
+ * @returns {THREE.Group} Complete chromosome group with all components
+ */
 function createChromosome(color, glowColor, position, scale = 1) {
     const group = new THREE.Group();
     group.userData.type = 'chromosome';
@@ -189,7 +232,12 @@ function createChromosome(color, glowColor, position, scale = 1) {
     return group;
 }
 
-// Create cell membrane with more detail
+/**
+ * Creates a translucent cell membrane with embedded proteins
+ * @param {number} radius - Membrane radius (default: 10)
+ * @param {number} opacity - Transparency level (default: 0.15)
+ * @returns {THREE.Group} Cell membrane with protein markers
+ */
 function createCellMembrane(radius = 10, opacity = 0.15) {
     const group = new THREE.Group();
     
@@ -234,7 +282,12 @@ function createCellMembrane(radius = 10, opacity = 0.15) {
     return group;
 }
 
-// Create spindle fiber with more detail
+/**
+ * Creates a spindle fiber connecting two points (microtubule visualization)
+ * @param {THREE.Vector3} start - Starting position
+ * @param {THREE.Vector3} end - Ending position
+ * @returns {THREE.Group} Spindle fiber with microtubule segments
+ */
 function createSpindleFiber(start, end) {
     const group = new THREE.Group();
     
@@ -279,7 +332,12 @@ function createSpindleFiber(start, end) {
     return group;
 }
 
-// Create centriole pair (spindle pole organizers)
+/**
+ * Creates a centriole with radiating microtubules
+ * @param {THREE.Vector3} position - Centriole position
+ * @param {number} scale - Size multiplier (default: 1)
+ * @returns {THREE.Group} Centriole with microtubule structure
+ */
 function createCentriole(position, scale = 1) {
     const group = new THREE.Group();
     
@@ -344,7 +402,16 @@ function createCentriole(position, scale = 1) {
     return group;
 }
 
-// Setup basic scene
+// ============================================================================
+// SCENE SETUP & INITIALIZATION
+// Core Three.js scene configuration
+// ============================================================================
+
+/**
+ * Initializes a complete Three.js scene with camera, renderer, and lighting
+ * @param {string} containerId - DOM element ID to render into
+ * @returns {Object} Scene data object with all Three.js components
+ */
 function setupScene(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return null;
@@ -398,7 +465,15 @@ function setupScene(containerId) {
     };
 }
 
-// Animation loop
+// ============================================================================
+// ANIMATION SYSTEM
+// Handles continuous rendering and updates
+// ============================================================================
+
+/**
+ * Main animation loop using requestAnimationFrame
+ * @param {Object} sceneData - Scene data with renderer, camera, and callbacks
+ */
 function animate(sceneData) {
     if (!sceneData.isAnimating) return;
     
@@ -417,7 +492,10 @@ function animate(sceneData) {
     sceneData.renderer.render(sceneData.scene, sceneData.camera);
 }
 
-// Start animation loop
+/**
+ * Starts the animation loop for a scene
+ * @param {Object} sceneData - Scene to animate
+ */
 function startAnimation(sceneData) {
     if (!sceneData.isAnimating) {
         sceneData.isAnimating = true;
@@ -425,7 +503,21 @@ function startAnimation(sceneData) {
     }
 }
 
-// Enable mouse and touch controls with hover detection
+// ============================================================================
+// INTERACTION CONTROLS
+// Mouse, touch, and hover interaction system
+// ============================================================================
+
+/**
+ * Enables mouse and touch controls with hover detection for 3D objects
+ * Supports:
+ * - Mouse drag to rotate
+ * - Touch drag to rotate
+ * - Pinch to zoom on mobile
+ * - Mouse wheel to zoom
+ * - Hover labels for educational tooltips
+ * @param {Object} sceneData - Scene to add controls to
+ */
 function enableControls(sceneData) {
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
@@ -631,9 +723,19 @@ function enableControls(sceneData) {
     }, { passive: false });
 }
 
-// Scene Creation Functions
+// ============================================================================
+// PHASE-SPECIFIC SCENE CREATORS
+// Each function creates a 3D visualization of a specific meiosis phase
+// ============================================================================
 
-// Hero Scene - Rotating DNA-like structure
+// ============================================================================
+// HERO SECTION - Landing Page Animation
+// ============================================================================
+
+/**
+ * Creates the hero section scene with rotating chromosomes
+ * Purpose: Eye-catching introduction to the application
+ */
 function createHeroScene() {
     const sceneData = setupScene('hero-canvas');
     if (!sceneData) return;
@@ -678,7 +780,15 @@ function createHeroScene() {
     window.meiosisScenes.hero = sceneData;
 }
 
-// Interphase Scene
+// ============================================================================
+// PHASE 1: INTERPHASE
+// DNA replication occurs, chromosomes exist as loose chromatin
+// ============================================================================
+
+/**
+ * Creates the Interphase scene
+ * Shows: Loose chromatin, nuclear envelope, and cell preparation
+ */
 function createInterphaseScene() {
     const sceneData = setupScene('canvas-interphase');
     if (!sceneData) return;
@@ -775,7 +885,15 @@ function createInterphaseScene() {
     window.meiosisScenes.interphase = sceneData;
 }
 
-// Prophase I Scene
+// ============================================================================
+// PHASE 2: PROPHASE I
+// Homologous chromosomes pair up and crossing over occurs
+// ============================================================================
+
+/**
+ * Creates the Prophase I scene
+ * Shows: Chromosome pairing, crossing over, and genetic recombination
+ */
 function createProphase1Scene() {
     const sceneData = setupScene('canvas-prophase1');
     if (!sceneData) return;
@@ -885,7 +1003,15 @@ function createProphase1Scene() {
     window.meiosisScenes.prophase1 = sceneData;
 }
 
-// Metaphase I Scene
+// ============================================================================
+// PHASE 3: METAPHASE I
+// Homologous pairs align at the cell equator
+// ============================================================================
+
+/**
+ * Creates the Metaphase I scene
+ * Shows: Chromosome alignment at metaphase plate with spindle fibers
+ */
 function createMetaphase1Scene() {
     const sceneData = setupScene('canvas-metaphase1');
     if (!sceneData) return;
@@ -955,7 +1081,15 @@ function createMetaphase1Scene() {
     window.meiosisScenes.metaphase1 = sceneData;
 }
 
-// Anaphase I Scene
+// ============================================================================
+// PHASE 4: ANAPHASE I
+// Homologous chromosomes separate and move to opposite poles
+// ============================================================================
+
+/**
+ * Creates the Anaphase I scene
+ * Shows: Separation of homologous chromosomes (reduction division)
+ */
 function createAnaphase1Scene() {
     const sceneData = setupScene('canvas-anaphase1');
     if (!sceneData) return;
@@ -1048,7 +1182,15 @@ function createAnaphase1Scene() {
     window.meiosisScenes.anaphase1 = sceneData;
 }
 
-// Telophase I Scene
+// ============================================================================
+// PHASE 5: TELOPHASE I
+// Chromosomes arrive at poles, cell prepares to divide
+// ============================================================================
+
+/**
+ * Creates the Telophase I scene
+ * Shows: Two forming cells with separated chromosome sets
+ */
 function createTelophase1Scene() {
     const sceneData = setupScene('canvas-telophase1');
     if (!sceneData) return;
@@ -1083,7 +1225,15 @@ function createTelophase1Scene() {
     window.meiosisScenes.telophase1 = sceneData;
 }
 
-// Cytokinesis I Scene
+// ============================================================================
+// PHASE 6: CYTOKINESIS I
+// Cell division produces two haploid cells
+// ============================================================================
+
+/**
+ * Creates the Cytokinesis I scene
+ * Shows: Two separate haploid cells with duplicated chromosomes
+ */
 function createCytokinesis1Scene() {
     const sceneData = setupScene('canvas-cytokinesis1');
     if (!sceneData) return;
@@ -1118,7 +1268,15 @@ function createCytokinesis1Scene() {
     window.meiosisScenes.cytokinesis1 = sceneData;
 }
 
-// Interkinesis Scene
+// ============================================================================
+// PHASE 7: INTERKINESIS
+// Brief resting phase between meiotic divisions (NO DNA replication)
+// ============================================================================
+
+/**
+ * Creates the Interkinesis scene
+ * Shows: Two cells in rest phase before Meiosis II
+ */
 function createInterkinesisScene() {
     const sceneData = setupScene('canvas-interkinesis');
     if (!sceneData) return;
@@ -1166,7 +1324,15 @@ function createInterkinesisScene() {
     window.meiosisScenes.interkinesis = sceneData;
 }
 
-// Prophase II Scene
+// ============================================================================
+// PHASE 8: PROPHASE II
+// Meiosis II begins, new spindle fibers form
+// ============================================================================
+
+/**
+ * Creates the Prophase II scene
+ * Shows: Two cells preparing for second division
+ */
 function createProphase2Scene() {
     const sceneData = setupScene('canvas-prophase2');
     if (!sceneData) return;
@@ -1201,7 +1367,15 @@ function createProphase2Scene() {
     window.meiosisScenes.prophase2 = sceneData;
 }
 
-// Metaphase II Scene
+// ============================================================================
+// PHASE 9: METAPHASE II
+// Chromosomes align at metaphase plate in both cells
+// ============================================================================
+
+/**
+ * Creates the Metaphase II scene
+ * Shows: Individual chromosomes aligned (similar to mitosis)
+ */
 function createMetaphase2Scene() {
     const sceneData = setupScene('canvas-metaphase2');
     if (!sceneData) return;
@@ -1236,7 +1410,15 @@ function createMetaphase2Scene() {
     window.meiosisScenes.metaphase2 = sceneData;
 }
 
-// Anaphase II Scene
+// ============================================================================
+// PHASE 10: ANAPHASE II
+// Sister chromatids separate into individual chromosomes
+// ============================================================================
+
+/**
+ * Creates the Anaphase II scene
+ * Shows: Chromatid separation in both cells
+ */
 function createAnaphase2Scene() {
     const sceneData = setupScene('canvas-anaphase2');
     if (!sceneData) return;
@@ -1282,7 +1464,15 @@ function createAnaphase2Scene() {
     window.meiosisScenes.anaphase2 = sceneData;
 }
 
-// Telophase II Scene
+// ============================================================================
+// PHASE 11: TELOPHASE II & CYTOKINESIS II
+// Final division produces four unique haploid gametes
+// ============================================================================
+
+/**
+ * Creates the Telophase II & Cytokinesis II scene
+ * Shows: Four genetically unique gametes (the final product!)
+ */
 function createTelophase2Scene() {
     const sceneData = setupScene('canvas-telophase2');
     if (!sceneData) return;
@@ -1406,7 +1596,15 @@ function createTelophase2Scene() {
     window.meiosisScenes.telophase2 = sceneData;
 }
 
-// Initialize all scenes when window loads
+// ============================================================================
+// APPLICATION INITIALIZATION
+// Creates all scenes when the page loads
+// ============================================================================
+
+/**
+ * Initializes all 3D scenes after DOM is ready
+ * Delayed slightly to ensure all containers are available
+ */
 window.addEventListener('load', () => {
     setTimeout(() => {
         createHeroScene();
@@ -1425,7 +1623,14 @@ window.addEventListener('load', () => {
     }, 100);
 });
 
-// Handle window resize
+// ============================================================================
+// RESPONSIVE HANDLING
+// Updates all scenes when window is resized
+// ============================================================================
+
+/**
+ * Adjusts camera aspect ratio and renderer size for all active scenes
+ */
 window.addEventListener('resize', () => {
     Object.values(window.meiosisScenes).forEach(sceneData => {
         if (sceneData.container && sceneData.camera && sceneData.renderer) {

@@ -1,6 +1,21 @@
 @echo off
+REM ============================================================================
+REM MEIOSIS EXPLORER - WINDOWS SERVER LAUNCHER
+REM ============================================================================
+REM Automated server startup script for Windows
+REM 
+REM Functionality:
+REM - Auto-detects Python or Node.js installation
+REM - Starts appropriate HTTP server
+REM - Opens browser automatically
+REM - Provides helpful error messages
+REM 
+REM Usage: Double-click this file or run from command prompt
+REM ============================================================================
 
-REM Change to the directory where this batch file is located
+REM ============================================================================
+REM INITIALIZATION - Navigate to script directory
+REM ============================================================================
 cd /d "%~dp0"
 
 echo ========================================
@@ -10,7 +25,9 @@ echo.
 echo Location: %CD%
 echo.
 
-REM Check if Python is installed first (most common on Windows)
+REM ============================================================================
+REM SERVER DETECTION & LAUNCH - Check for Python
+REM ============================================================================
 where python >nul 2>nul
 if %ERRORLEVEL% EQU 0 (
     echo [SUCCESS] Python found!
@@ -30,7 +47,9 @@ if %ERRORLEVEL% EQU 0 (
     goto :end
 )
 
-REM Check if Node.js is installed
+REM ============================================================================
+REM FALLBACK OPTION - Check for Node.js
+REM ============================================================================
 where node >nul 2>nul
 if %ERRORLEVEL% EQU 0 (
     echo [SUCCESS] Node.js found!
@@ -50,7 +69,9 @@ if %ERRORLEVEL% EQU 0 (
     goto :end
 )
 
-REM Neither found
+REM ============================================================================
+REM ERROR HANDLING - No server software found
+REM ============================================================================
 echo [ERROR] Neither Python nor Node.js found!
 echo.
 echo Please install one of the following:

@@ -1,7 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--
+    ============================================================================
+    MEIOSIS EXPLORER - Interactive 3D Educational Application
+    ============================================================================
+    An immersive web application teaching meiosis through interactive 3D
+    visualizations and engaging quiz content.
+    
+    Technology Stack:
+    - Three.js for 3D rendering
+    - Vanilla JavaScript for interactivity
+    - Modern CSS with glassmorphism effects
+    - Responsive design for all devices
+    ============================================================================
+-->
 <head>
-    <!-- Meta Tags -->
+    <!-- ================================================================ -->
+    <!-- META TAGS & CONFIGURATION -->
+    <!-- ================================================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,13 +27,19 @@
     
     <title>Meiosis Explorer - Interactive 3D Journey</title>
     
-    <!-- Favicon -->
+    <!-- ================================================================ -->
+    <!-- FAVICON -->
+    <!-- ================================================================ -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     
-    <!-- Stylesheets -->
+    <!-- ================================================================ -->
+    <!-- STYLESHEETS -->
+    <!-- ================================================================ -->
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Fonts -->
+    <!-- ================================================================ -->
+    <!-- EXTERNAL FONTS -->
+    <!-- ================================================================ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -166,8 +188,8 @@
                     <h2 class="phase-title">Metaphase I</h2>
                     <p class="phase-description">
                         Homologous chromosome pairs align at the cell's equator, forming the metaphase plate. 
-                        Spindle fibers attach to the kinetochores at each chromosome's centromere, 
-                        preparing to separate them.
+                        Spindle fibers latch onto each chromosome at the centromere, getting ready to pull
+                         them apart.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -220,8 +242,8 @@
                     <span class="phase-number">05</span>
                     <h2 class="phase-title">Telophase I</h2>
                     <p class="phase-description">
-                        Chromosomes arrive at opposite poles of the cell. Nuclear envelopes may reform 
-                        around each set of chromosomes. The cell prepares for cytokinesis.
+                        Chromosomes arrive at opposite poles of the cell. 
+                        The cell prepares for cytokinesis.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -252,7 +274,7 @@
                     <p class="phase-description">
                         The cell divides into two daughter cells. Each cell now has half the original number 
                         of chromosomes (haploid). However, each chromosome still consists of two sister chromatids 
-                        joined at the centromere, requiring a second division.
+                         requiring a second division.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -279,8 +301,7 @@
                     <span class="phase-number">07</span>
                     <h2 class="phase-title">Interkinesis</h2>
                     <p class="phase-description">
-                        A brief resting phase between the two meiotic divisions. Critically, DNA replication 
-                        does NOT occur during interkinesis (unlike before meiosis I). The cells rest briefly 
+                        A brief resting phase between the two meiotic divisions. The cells rest briefly 
                         before entering meiosis II.
                     </p>
                     <div class="phase-facts">
@@ -314,8 +335,8 @@
                     <span class="phase-number">08</span>
                     <h2 class="phase-title">Prophase II</h2>
                     <p class="phase-description">
-                        Meiosis II begins. New spindle fibers form in both cells. Chromosomes condense again, 
-                        and the nuclear envelope breaks down if it had reformed.
+                        Meiosis II begins. New spindle fibers form in both cells. Chromosomes condense again.
+                
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -338,8 +359,8 @@
                     <span class="phase-number">09</span>
                     <h2 class="phase-title">Metaphase II</h2>
                     <p class="phase-description">
-                        Individual chromosomes align at the metaphase plate in both cells. Spindle fibers 
-                        attach to the kinetochores, preparing to separate sister chromatids.
+                        Individual chromosomes align at the metaphase plate in both cells. 
+                        Preparing to separate sister chromatids.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -393,7 +414,7 @@
                     <h2 class="phase-title">Telophase II + Cytokinesis II</h2>
                     <p class="phase-description">
                         Nuclear envelopes reform around each set of chromosomes. Cytokinesis divides 
-                        both cells again, producing four haploid gametes (sperm or egg cells). 
+                        both cells again, producing four haploid gametes. 
                         Each gamete is genetically unique due to crossing over and independent assortment.
                     </p>
                     <div class="phase-facts">
@@ -652,11 +673,12 @@
     </button>
 
     <!-- ================================================================ -->
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT LIBRARIES & SCRIPTS -->
+    <!-- Load order matters: Three.js → 3D Engine → Main Script -->
     <!-- ================================================================ -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
-    <script src="meiosis3d.js"></script>
-    <script src="script.js"></script>
+    <script src="meiosis3d.js"></script>  <!-- 3D visualization engine -->
+    <script src="script.js"></script>      <!-- UI interactions & quiz logic -->
 </body>
 </html>
 
