@@ -1,25 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0f">
+    
     <title>Meiosis Explorer - Interactive 3D Journey</title>
+    
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Progress Indicator -->
+    <!-- ================================================================ -->
+    <!-- PROGRESS BAR -->
+    <!-- ================================================================ -->
     <div class="progress-bar">
         <div class="progress-fill"></div>
     </div>
 
-    <!-- Navigation -->
+    <!-- ================================================================ -->
+    <!-- NAVIGATION -->
+    <!-- ================================================================ -->
     <nav class="nav-glass">
         <div class="logo">Meiosis Explorer</div>
-        <div class="nav-links">
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+            <span id="menu-icon">☰</span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="#hero">Home</a>
             <a href="#phases">Phases</a>
             <a href="#quiz">Quiz</a>
@@ -27,7 +46,9 @@
         <div class="phase-indicator">Phase <span id="current-phase">0</span>/11</div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- ================================================================ -->
+    <!-- HERO SECTION -->
+    <!-- ================================================================ -->
     <section id="hero" class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">
@@ -35,8 +56,8 @@
                 The Journey of Life
             </h1>
             <p class="hero-subtitle">
-                Ever wonder why you look different from your siblings? It's all because of meiosis!
-                Let's explore this amazing process with cool 3D models you can spin and zoom.
+                Ever wonder why siblings look different? Meiosis is the answer.
+                Explore this process through interactive 3D models you can rotate and zoom.
             </p>
             <button class="cta-button" onclick="scrollToPhases()">
                 Begin Journey
@@ -46,7 +67,9 @@
         <div class="hero-visual" id="hero-canvas"></div>
     </section>
 
-    <!-- PMAT Mnemonic Section -->
+    <!-- ================================================================ -->
+    <!-- PMAT MNEMONIC SECTION -->
+    <!-- ================================================================ -->
     <section class="pmat-section">
         <div class="pmat-container glass-panel">
             <div class="pmat-emoji">☕</div>
@@ -74,19 +97,21 @@
         </div>
     </section>
 
-    <!-- Phase Sections -->
+    <!-- ================================================================ -->
+    <!-- MEIOSIS PHASES -->
+    <!-- ================================================================ -->
     <div id="phases" class="phases-container">
         
-        <!-- Interphase -->
+        <!-- Phase 1: Interphase -->
         <section class="phase-section" data-phase="1">
             <div class="phase-content">
                 <div class="phase-info glass-panel">
                     <span class="phase-number">01</span>
                     <h2 class="phase-title">Interphase</h2>
                     <p class="phase-description">
-                        The cell gets ready for division. It copies all its DNA (like making a backup). 
-                        Each chromosome now has a twin copy called a sister chromatid. The cell also 
-                        grows bigger and makes the proteins it needs.
+                        The cell prepares for division by replicating its DNA. 
+                        Each chromosome now has a duplicate copy called a sister chromatid, joined at the centromere. 
+                        The cell also grows and synthesizes the proteins needed for division.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -98,7 +123,6 @@
                             <span class="fact-value">Sister Chromatids Form</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('interphase')">Learn More</button>
                 </div>
                 <div class="phase-visual">
                     <div class="canvas-container" id="canvas-interphase"></div>
@@ -106,7 +130,7 @@
             </div>
         </section>
 
-        <!-- Prophase I -->
+        <!-- Phase 2: Prophase I -->
         <section class="phase-section" data-phase="2">
             <div class="phase-content reverse">
                 <div class="phase-visual">
@@ -116,9 +140,9 @@
                     <span class="phase-number">02</span>
                     <h2 class="phase-title">Prophase I</h2>
                     <p class="phase-description">
-                        Matching chromosomes (one from mom, one from dad) pair up side by side. While paired, 
-                        they swap some DNA pieces with each other. This is called crossing over, and it's 
-                        why you're unique!
+                        Homologous chromosomes (one maternal, one paternal) pair up side by side. While paired, 
+                        they exchange DNA segments through crossing over. This genetic recombination 
+                        creates variation in offspring.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -130,20 +154,20 @@
                             <span class="fact-value">Genetic Variation</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('prophase1')">Learn More</button>
                 </div>
             </div>
         </section>
 
-        <!-- Metaphase I -->
+        <!-- Phase 3: Metaphase I -->
         <section class="phase-section" data-phase="3">
             <div class="phase-content">
                 <div class="phase-info glass-panel">
                     <span class="phase-number">03</span>
                     <h2 class="phase-title">Metaphase I</h2>
                     <p class="phase-description">
-                        The chromosome pairs line up in the middle of the cell (like lining up for a race). 
-                        Spindle fibers (think: ropes) attach to them and get ready to pull them apart.
+                        Homologous chromosome pairs align at the cell's equator, forming the metaphase plate. 
+                        Spindle fibers attach to the kinetochores at each chromosome's centromere, 
+                        preparing to separate them.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -155,7 +179,6 @@
                             <span class="fact-value">Metaphase Plate</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('metaphase1')">Learn More</button>
                 </div>
                 <div class="phase-visual">
                     <div class="canvas-container" id="canvas-metaphase1"></div>
@@ -163,7 +186,7 @@
             </div>
         </section>
 
-        <!-- Anaphase I -->
+        <!-- Phase 4: Anaphase I -->
         <section class="phase-section" data-phase="4">
             <div class="phase-content reverse">
                 <div class="phase-visual">
@@ -173,8 +196,8 @@
                     <span class="phase-number">04</span>
                     <h2 class="phase-title">Anaphase I</h2>
                     <p class="phase-description">
-                        The chromosome pairs split up! One from each pair goes to opposite sides of the cell.  
-                        Note: The twin copies (sister chromatids) still stick together for now.
+                        Homologous chromosomes separate and move to opposite poles of the cell.  
+                        Note: Sister chromatids remain attached at their centromeres during this phase.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -186,20 +209,19 @@
                             <span class="fact-value">Reduction Division</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('anaphase1')">Learn More</button>
                 </div>
             </div>
         </section>
 
-        <!-- Telophase I -->
+        <!-- Phase 5: Telophase I -->
         <section class="phase-section" data-phase="5">
             <div class="phase-content">
                 <div class="phase-info glass-panel">
                     <span class="phase-number">05</span>
                     <h2 class="phase-title">Telophase I</h2>
                     <p class="phase-description">
-                        The chromosomes reach opposite ends of the cell. Nuclear membranes might form 
-                        around them again (like putting them in bubbles). The cell gets ready to split in two.
+                        Chromosomes arrive at opposite poles of the cell. Nuclear envelopes may reform 
+                        around each set of chromosomes. The cell prepares for cytokinesis.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -211,7 +233,6 @@
                             <span class="fact-value">Cytokinesis I</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('telophase1')">Learn More</button>
                 </div>
                 <div class="phase-visual">
                     <div class="canvas-container" id="canvas-telophase1"></div>
@@ -219,7 +240,7 @@
             </div>
         </section>
 
-        <!-- Cytokinesis I -->
+        <!-- Phase 6: Cytokinesis I -->
         <section class="phase-section" data-phase="6">
             <div class="phase-content reverse">
                 <div class="phase-visual">
@@ -229,9 +250,9 @@
                     <span class="phase-number">06</span>
                     <h2 class="phase-title">Cytokinesis I</h2>
                     <p class="phase-description">
-                        The cell actually splits into two! Each new cell has HALF the number of chromosomes 
-                        as before. But remember: each chromosome is still doubled (twin copies stuck together). 
-                        That's why we need a second division!
+                        The cell divides into two daughter cells. Each cell now has half the original number 
+                        of chromosomes (haploid). However, each chromosome still consists of two sister chromatids 
+                        joined at the centromere, requiring a second division.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -247,21 +268,20 @@
                             <span class="fact-value">Still Duplicated</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('cytokinesis1')">Learn More</button>
                 </div>
             </div>
         </section>
 
-        <!-- Interkinesis -->
+        <!-- Phase 7: Interkinesis -->
         <section class="phase-section" data-phase="7">
             <div class="phase-content">
                 <div class="phase-info glass-panel">
                     <span class="phase-number">07</span>
                     <h2 class="phase-title">Interkinesis</h2>
                     <p class="phase-description">
-                        Time for a quick break between round 1 and round 2! IMPORTANT: The DNA does NOT 
-                        copy itself again (unlike before round 1). The cells just rest a bit. If DNA copied 
-                        here, we'd mess up the whole process!
+                        A brief resting phase between the two meiotic divisions. Critically, DNA replication 
+                        does NOT occur during interkinesis (unlike before meiosis I). The cells rest briefly 
+                        before entering meiosis II.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -277,7 +297,6 @@
                             <span class="fact-value">Prepare for Meiosis II</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('interkinesis')">Learn More</button>
                 </div>
                 <div class="phase-visual">
                     <div class="canvas-container" id="canvas-interkinesis"></div>
@@ -285,7 +304,7 @@
             </div>
         </section>
 
-        <!-- Prophase II -->
+        <!-- Phase 8: Prophase II -->
         <section class="phase-section" data-phase="8">
             <div class="phase-content reverse">
                 <div class="phase-visual">
@@ -295,8 +314,8 @@
                     <span class="phase-number">08</span>
                     <h2 class="phase-title">Prophase II</h2>
                     <p class="phase-description">
-                        Round 2 begins! New spindle fibers form in BOTH cells. The chromosomes tighten up again, 
-                        and the nuclear membrane disappears (if it came back).
+                        Meiosis II begins. New spindle fibers form in both cells. Chromosomes condense again, 
+                        and the nuclear envelope breaks down if it had reformed.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -308,20 +327,19 @@
                             <span class="fact-value">No DNA Replication</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('prophase2')">Learn More</button>
                 </div>
             </div>
         </section>
 
-        <!-- Metaphase II -->
+        <!-- Phase 9: Metaphase II -->
         <section class="phase-section" data-phase="9">
             <div class="phase-content">
                 <div class="phase-info glass-panel">
                     <span class="phase-number">09</span>
                     <h2 class="phase-title">Metaphase II</h2>
                     <p class="phase-description">
-                        The chromosomes line up in the middle again (in both cells). This time, the spindle 
-                        fibers are going to separate the twin copies from each other.
+                        Individual chromosomes align at the metaphase plate in both cells. Spindle fibers 
+                        attach to the kinetochores, preparing to separate sister chromatids.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -333,7 +351,6 @@
                             <span class="fact-value">Mitosis Metaphase</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('metaphase2')">Learn More</button>
                 </div>
                 <div class="phase-visual">
                     <div class="canvas-container" id="canvas-metaphase2"></div>
@@ -341,7 +358,7 @@
             </div>
         </section>
 
-        <!-- Anaphase II -->
+        <!-- Phase 10: Anaphase II -->
         <section class="phase-section" data-phase="10">
             <div class="phase-content reverse">
                 <div class="phase-visual">
@@ -351,8 +368,8 @@
                     <span class="phase-number">10</span>
                     <h2 class="phase-title">Anaphase II</h2>
                     <p class="phase-description">
-                        The twin copies FINALLY separate! They get pulled to opposite sides of each cell. 
-                        Once they separate, we stop calling them "sister chromatids" and just call them chromosomes.
+                        Sister chromatids separate and move to opposite poles of each cell. 
+                        Once separated, each chromatid is now considered an individual chromosome.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -364,21 +381,20 @@
                             <span class="fact-value">Individual Chromosomes</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('anaphase2')">Learn More</button>
                 </div>
             </div>
         </section>
 
-        <!-- Telophase II + Cytokinesis II -->
+        <!-- Phase 11: Telophase II + Cytokinesis II -->
         <section class="phase-section" data-phase="11">
             <div class="phase-content">
                 <div class="phase-info glass-panel">
                     <span class="phase-number">11</span>
                     <h2 class="phase-title">Telophase II + Cytokinesis II</h2>
                     <p class="phase-description">
-                        The grand finale! Nuclear membranes form around all four groups of chromosomes. 
-                        The cells split one more time. Result: FOUR unique cells (sperm or egg cells)! 
-                        Each one is different thanks to all that mixing and splitting!
+                        Nuclear envelopes reform around each set of chromosomes. Cytokinesis divides 
+                        both cells again, producing four haploid gametes (sperm or egg cells). 
+                        Each gamete is genetically unique due to crossing over and independent assortment.
                     </p>
                     <div class="phase-facts">
                         <div class="fact-item">
@@ -390,7 +406,6 @@
                             <span class="fact-value">4 Unique Gametes</span>
                         </div>
                     </div>
-                    <button class="info-btn" onclick="showPopup('telophase2')">Learn More</button>
                 </div>
                 <div class="phase-visual">
                     <div class="canvas-container" id="canvas-telophase2"></div>
@@ -400,7 +415,9 @@
 
     </div>
 
-    <!-- Genetic Variation Section -->
+    <!-- ================================================================ -->
+    <!-- GENETIC VARIATION SECTION -->
+    <!-- ================================================================ -->
     <section class="genetics-section">
         <div class="genetics-container">
             <h2 class="section-title"><span class="glow-text">Genetic Variation</span> Explained</h2>
@@ -411,20 +428,20 @@
                     <div class="genetics-icon">🔀</div>
                     <h3 class="genetics-card-title">Crossing Over</h3>
                     <div class="genetics-content">
-                        <h4>How It Works:</h4>
+                        <h4>Mechanism:</h4>
                         <p>
-                            In <strong>Prophase I</strong>, matching chromosomes (one from mom, one from dad) line up 
-                            next to each other. While they're touching, they swap pieces of DNA! It's like trading 
-                            cards—they exchange genetic information.
+                            During <strong>Prophase I</strong>, homologous chromosomes (maternal and paternal) pair closely 
+                            and exchange DNA segments at points called chiasmata. This process shuffles genetic material 
+                            between chromosome pairs.
                         </p>
-                        <h4>Why It Happens:</h4>
+                        <h4>Significance:</h4>
                         <p>
-                            <strong>The Point:</strong> Makes new combinations of traits. Without crossing over, you'd 
-                            get all of mom's traits on one chromosome OR all of dad's—no mix! This mixing makes you unique.
+                            Crossing over creates new combinations of alleles. Without it, each chromosome would be 
+                            inherited intact from one parent. This recombination produces genetic diversity within populations.
                         </p>
                         <p>
-                            <strong>Why It Matters:</strong> More variety means species can adapt better when things change. 
-                            It's also why you and your siblings look different (unless you're identical twins)!
+                            Greater genetic variation allows species to adapt to environmental changes. This is why 
+                            siblings inherit different combinations of parental traits.
                         </p>
                         <div class="genetics-stat">
                             <span class="stat-number">2-3</span>
@@ -438,21 +455,20 @@
                     <div class="genetics-icon">🎲</div>
                     <h3 class="genetics-card-title">Independent Assortment</h3>
                     <div class="genetics-content">
-                        <h4>How It Works:</h4>
+                        <h4>Mechanism:</h4>
                         <p>
-                            In <strong>Metaphase I</strong>, chromosome pairs line up in the middle—but which way they face 
-                            is totally random! Mom's or dad's chromosome can face either direction. When they split apart, 
-                            it's like flipping a coin for each pair. Totally by chance!
+                            During <strong>Metaphase I</strong>, homologous pairs align randomly at the metaphase plate. 
+                            The orientation of each pair is independent—maternal or paternal chromosomes can face either pole. 
+                            This randomness determines which chromosomes end up in each gamete.
                         </p>
-                        <h4>Why It Happens:</h4>
+                        <h4>Significance:</h4>
                         <p>
-                            <strong>The Point:</strong> Makes sure each sperm or egg gets a random mix of mom and dad 
-                            chromosomes. This is one of Mendel's laws!
+                            Each gamete receives a random assortment of maternal and paternal chromosomes. 
+                            This follows Mendel's law of independent assortment.
                         </p>
                         <p>
-                            <strong>Why It Matters:</strong> Creates TONS of variety! Humans have 23 chromosome pairs. 
-                            With independent assortment, that means over 8 MILLION different possible combinations! 
-                            That's a lot of variety!
+                            In humans (23 chromosome pairs), independent assortment alone creates over 8 million 
+                            possible combinations per gamete. This exponential variation is fundamental to genetic diversity.
                         </p>
                         <div class="genetics-stat">
                             <span class="stat-number">8.4 Million+</span>
@@ -463,18 +479,20 @@
             </div>
 
             <div class="genetics-summary glass-panel">
-                <h3>🧬 Combined Power</h3>
+                <h3>The Big Picture</h3>
                 <p>
-                    When you mix crossing over AND independent assortment together, you can make over 
-                    <strong>70 TRILLION</strong> different sperm or egg cells! Then when a sperm meets an egg, 
-                    the combinations are basically endless. This is why you're one-of-a-kind—and why evolution 
-                    and adaptation work!
+                    Crossing over and independent assortment together can produce over 
+                    <strong>70 trillion</strong> different gamete combinations. When fertilization occurs, 
+                    the genetic possibilities become nearly infinite. This variation is the foundation 
+                    of evolution and why each person is genetically unique.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Meiosis vs Mitosis Comparison -->
+    <!-- ================================================================ -->
+    <!-- MEIOSIS VS MITOSIS COMPARISON -->
+    <!-- ================================================================ -->
     <section class="comparison-section">
         <div class="comparison-container">
             <h2 class="section-title"><span class="glow-text">Meiosis</span> vs <span class="glow-text">Mitosis</span></h2>
@@ -487,34 +505,34 @@
                     
                     <div class="comparison-item">
                         <h4>📍 Where It Happens</h4>
-                        <p><strong>Only in sex organs</strong></p>
+                        <p><strong>Reproductive organs only</strong></p>
                         <ul>
-                            <li>Testes (males) make sperm</li>
-                            <li>Ovaries (females) make eggs</li>
-                            <li>Nowhere else in your body!</li>
+                            <li>Testes produce sperm (spermatogenesis)</li>
+                            <li>Ovaries produce eggs (oogenesis)</li>
+                            <li>Does not occur in somatic cells</li>
                         </ul>
                     </div>
 
                     <div class="comparison-item">
                         <h4>🎯 Why It Happens</h4>
-                        <p><strong>To make babies</strong></p>
+                        <p><strong>Sexual reproduction</strong></p>
                         <ul>
-                            <li>Makes sperm and egg cells</li>
-                            <li>Cuts chromosome number in half</li>
-                            <li>Creates variety (everyone's different!)</li>
-                            <li>Lets species change and evolve</li>
+                            <li>Produces gametes (sex cells)</li>
+                            <li>Reduces chromosome number by half</li>
+                            <li>Generates genetic diversity</li>
+                            <li>Enables evolution through variation</li>
                         </ul>
                     </div>
 
                     <div class="comparison-item">
                         <h4>🔢 What You Get</h4>
-                        <p><strong>4 unique cells with half the chromosomes</strong></p>
+                        <p><strong>Four haploid gametes</strong></p>
                         <ul>
-                            <li>Number: 4 cells</li>
-                            <li>Chromosomes: Half (23 instead of 46)</li>
-                            <li>Uniqueness: All 4 are different!</li>
-                            <li>Function: Sperm or egg cells</li>
-                            <li>Humans: 46 → 23 chromosomes</li>
+                            <li>Cell count: 4 daughter cells</li>
+                            <li>Chromosome number: Haploid (n)</li>
+                            <li>Genetic makeup: Each cell unique</li>
+                            <li>Cell type: Functional gametes</li>
+                            <li>Human example: 46 → 23 chromosomes</li>
                         </ul>
                     </div>
 
@@ -535,34 +553,34 @@
                     
                     <div class="comparison-item">
                         <h4>📍 Where It Happens</h4>
-                        <p><strong>Everywhere in your body</strong></p>
+                        <p><strong>All somatic cells</strong></p>
                         <ul>
-                            <li>All body parts and organs</li>
-                            <li>Skin, muscles, bones, organs</li>
-                            <li>Basically everywhere EXCEPT sex organs</li>
+                            <li>Throughout body tissues</li>
+                            <li>Skin, muscle, bone, organs</li>
+                            <li>Any non-reproductive cell</li>
                         </ul>
                     </div>
 
                     <div class="comparison-item">
                         <h4>🎯 Why It Happens</h4>
-                        <p><strong>Growth and fixing injuries</strong></p>
+                        <p><strong>Growth and repair</strong></p>
                         <ul>
-                            <li>Helps you grow bigger</li>
-                            <li>Heals cuts and injuries</li>
-                            <li>Replaces dead or damaged cells</li>
-                            <li>Some simple organisms use it to make babies</li>
+                            <li>Organism growth and development</li>
+                            <li>Tissue repair and healing</li>
+                            <li>Cell replacement throughout life</li>
+                            <li>Asexual reproduction in some organisms</li>
                         </ul>
                     </div>
 
                     <div class="comparison-item">
                         <h4>🔢 What You Get</h4>
-                        <p><strong>2 identical cells with full chromosomes</strong></p>
+                        <p><strong>Two diploid daughter cells</strong></p>
                         <ul>
-                            <li>Number: 2 cells</li>
-                            <li>Chromosomes: Full set (46 stays 46)</li>
-                            <li>Uniqueness: Exact copies (clones!)</li>
-                            <li>Function: Regular body cells</li>
-                            <li>Humans: 46 → 46 chromosomes</li>
+                            <li>Cell count: 2 daughter cells</li>
+                            <li>Chromosome number: Diploid (2n)</li>
+                            <li>Genetic makeup: Genetically identical</li>
+                            <li>Cell type: Somatic cells</li>
+                            <li>Human example: 46 → 46 chromosomes</li>
                         </ul>
                     </div>
 
@@ -579,18 +597,20 @@
             </div>
 
             <div class="comparison-summary glass-panel">
-                <h3>🔑 Remember This!</h3>
+                <h3>Quick Summary</h3>
                 <p>
-                    <strong>Mitosis</strong> = Makes exact copies for growing and healing. <br>
-                    <strong>Meiosis</strong> = Makes unique sperm/egg cells for making babies. <br><br>
-                    Both are super important! Mitosis keeps you alive and healthy. Meiosis makes sure 
-                    every kid is unique and different!
+                    <strong>Mitosis</strong> makes exact copies for growth and healing. <br>
+                    <strong>Meiosis</strong> makes unique sperm/egg cells for reproduction. <br><br>
+                    Both processes are essential: mitosis maintains your body, while meiosis creates 
+                    genetic diversity in offspring.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Quiz Section -->
+    <!-- ================================================================ -->
+    <!-- QUIZ SECTION -->
+    <!-- ================================================================ -->
     <section id="quiz" class="quiz-section">
         <div class="quiz-container glass-panel">
             <h2 class="quiz-title">Test Your Knowledge</h2>
@@ -621,15 +641,9 @@
         </div>
     </section>
 
-    <!-- Info Popup -->
-    <div id="info-popup" class="popup-overlay hidden">
-        <div class="popup-content glass-panel">
-            <button class="popup-close" onclick="closePopup()">×</button>
-            <div id="popup-body"></div>
-        </div>
-    </div>
-
-    <!-- Sound Toggle -->
+    <!-- ================================================================ -->
+    <!-- SOUND TOGGLE BUTTON -->
+    <!-- ================================================================ -->
     <button class="sound-toggle" id="sound-toggle" title="Toggle Sound">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -637,7 +651,9 @@
         </svg>
     </button>
 
-    <!-- Scripts -->
+    <!-- ================================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================================================ -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
     <script src="meiosis3d.js"></script>
     <script src="script.js"></script>

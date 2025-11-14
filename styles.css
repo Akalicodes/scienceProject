@@ -1,3 +1,14 @@
+/**
+ * ============================================================================
+ * MEIOSIS EXPLORER - STYLES
+ * Educational 3D Interactive Application
+ * ============================================================================
+ */
+
+/* ============================================================================
+   RESET & BASE STYLES
+   ============================================================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,13 +16,18 @@
 }
 
 :root {
+    /* Color Variables */
     --primary: #00d4ff;
     --secondary: #a855f7;
     --accent: #ec4899;
     --bg-dark: #0a0a0f;
     --bg-darker: #05050a;
+    
+    /* Text Colors */
     --text-primary: #ffffff;
     --text-secondary: #a0aec0;
+    
+    /* Glass Morphism */
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
 }
@@ -22,9 +38,15 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: pan-y;
 }
 
-/* Progress Bar */
+/* ============================================================================
+   PROGRESS BAR
+   ============================================================================ */
+
 .progress-bar {
     position: fixed;
     top: 0;
@@ -42,7 +64,10 @@ body {
     transition: width 0.3s ease;
 }
 
-/* Navigation */
+/* ============================================================================
+   NAVIGATION
+   ============================================================================ */
+
 .nav-glass {
     position: fixed;
     top: 20px;
@@ -96,7 +121,10 @@ body {
     color: var(--primary);
 }
 
-/* Hero Section */
+/* ============================================================================
+   HERO SECTION
+   ============================================================================ */
+
 .hero-section {
     min-height: 100vh;
     display: flex;
@@ -207,6 +235,10 @@ body {
     }
 }
 
+/* ============================================================================
+   3D INTERACTION ELEMENTS
+   ============================================================================ */
+
 /* Hover Label for 3D Objects */
 .hover-label {
     position: absolute;
@@ -228,7 +260,36 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Glass Panel */
+/* Mobile 3D Instructions */
+.mobile-3d-hint {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 212, 255, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 10;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    animation: fadeInOut 4s ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+}
+
+/* ============================================================================
+   GLASS MORPHISM COMPONENTS
+   ============================================================================ */
+
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
@@ -237,7 +298,10 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* PMAT Mnemonic Section */
+/* ============================================================================
+   PMAT MNEMONIC SECTION
+   ============================================================================ */
+
 .pmat-section {
     padding: 100px 8%;
     display: flex;
@@ -329,7 +393,10 @@ body {
     border: 1px solid rgba(0, 212, 255, 0.2);
 }
 
-/* Phase Sections */
+/* ============================================================================
+   PHASE SECTIONS
+   ============================================================================ */
+
 .phases-container {
     padding: 100px 0;
 }
@@ -447,9 +514,20 @@ body {
     overflow: hidden;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--glass-border);
+    position: relative;
 }
 
-/* Quiz Section */
+.canvas-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+/* ============================================================================
+   QUIZ SECTION
+   ============================================================================ */
+
 .quiz-section {
     min-height: 100vh;
     padding: 100px 8%;
@@ -579,7 +657,10 @@ body {
     font-weight: 600;
 }
 
-/* Quiz Results */
+/* ============================================================================
+   QUIZ RESULTS
+   ============================================================================ */
+
 .quiz-results {
     text-align: center;
 }
@@ -616,7 +697,10 @@ body {
     margin-bottom: 40px;
 }
 
-/* Popup */
+/* ============================================================================
+   POPUP OVERLAY
+   ============================================================================ */
+
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -685,7 +769,10 @@ body {
     margin-bottom: 15px;
 }
 
-/* Sound Toggle */
+/* ============================================================================
+   SOUND TOGGLE BUTTON
+   ============================================================================ */
+
 .sound-toggle {
     position: fixed;
     bottom: 40px;
@@ -714,7 +801,10 @@ body {
     opacity: 0.3;
 }
 
-/* Genetic Variation Section */
+/* ============================================================================
+   GENETIC VARIATION SECTION
+   ============================================================================ */
+
 .genetics-section {
     padding: 100px 8%;
     background: linear-gradient(180deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
@@ -821,7 +911,10 @@ body {
     color: var(--text-secondary);
 }
 
-/* Comparison Section */
+/* ============================================================================
+   COMPARISON SECTION (MEIOSIS VS MITOSIS)
+   ============================================================================ */
+
 .comparison-section {
     padding: 100px 8%;
     background: var(--bg-darker);
@@ -903,7 +996,25 @@ body {
     color: var(--text-secondary);
 }
 
-/* Responsive */
+/* ============================================================================
+   MOBILE MENU
+   ============================================================================ */
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN - DESKTOP & TABLETS
+   ============================================================================ */
+
 @media (max-width: 1200px) {
     .hero-title {
         font-size: 4rem;
@@ -919,27 +1030,79 @@ body {
     }
 }
 
+/* ============================================================================
+   RESPONSIVE DESIGN - MOBILE DEVICES
+   ============================================================================ */
+
 @media (max-width: 768px) {
-    .pmat-breakdown {
-        grid-template-columns: 1fr;
+    /* Improve touch target sizes */
+    * {
+        -webkit-tap-highlight-color: rgba(0, 212, 255, 0.3);
     }
     
-    .pmat-container {
-        padding: 40px 30px;
+    /* Navigation improvements */
+    .nav-glass {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        transform: none;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 12px 15px;
+        gap: 10px;
     }
     
-    .pmat-title {
-        font-size: 2rem;
+    .logo {
+        font-size: 1rem;
     }
     
-    .pmat-subtitle {
-        font-size: 1.4rem;
+    .mobile-menu-toggle {
+        display: block;
     }
     
+    .nav-links {
+        position: fixed;
+        top: 70px;
+        left: 10px;
+        right: 10px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+        display: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .nav-links a {
+        font-size: 1.1rem;
+        padding: 12px;
+        text-align: center;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+        background: rgba(0, 212, 255, 0.1);
+    }
+    
+    .phase-indicator {
+        font-size: 0.85rem;
+    }
+    
+    /* Hero section */
     .hero-section {
         flex-direction: column;
         text-align: center;
-        padding: 100px 5% 50px;
+        padding: 120px 5% 50px;
+        min-height: 90vh;
     }
     
     .hero-content {
@@ -947,91 +1110,345 @@ body {
     }
     
     .hero-title {
-        font-size: 3rem;
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
     }
     
     .hero-visual {
-        height: 400px;
+        height: 350px;
         width: 100%;
+        margin-top: 30px;
+    }
+    
+    /* Buttons - larger touch targets */
+    .cta-button {
+        padding: 16px 35px;
+        font-size: 1rem;
+        min-height: 48px;
+    }
+    
+    .info-btn {
+        padding: 14px 28px;
+        font-size: 0.95rem;
+        min-height: 48px;
+    }
+    
+    /* PMAT Section */
+    .pmat-section {
+        padding: 60px 5%;
+    }
+    
+    .pmat-breakdown {
+        grid-template-columns: 1fr;
+    }
+    
+    .pmat-container {
+        padding: 35px 20px;
+    }
+    
+    .pmat-title {
+        font-size: 1.8rem;
+    }
+    
+    .pmat-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .pmat-letter {
+        font-size: 2rem;
+        width: 40px;
+    }
+    
+    .pmat-word {
+        font-size: 1.1rem;
+    }
+    
+    .pmat-note {
+        font-size: 1rem;
+    }
+    
+    /* Phase sections */
+    .phases-container {
+        padding: 60px 0;
+    }
+    
+    .phase-section {
+        min-height: auto;
+        padding: 60px 5%;
     }
     
     .phase-content,
     .phase-content.reverse {
         flex-direction: column;
-        gap: 40px;
+        gap: 30px;
     }
     
     .phase-info {
         max-width: 100%;
-        padding: 30px;
+        padding: 25px 20px;
+    }
+    
+    .phase-number {
+        font-size: 0.9rem;
     }
     
     .phase-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin: 10px 0 20px;
+    }
+    
+    .phase-description {
+        font-size: 1rem;
+        line-height: 1.7;
     }
     
     .phase-visual {
-        height: 400px;
+        height: 350px;
         width: 100%;
+        min-height: 300px;
     }
     
-    .nav-glass {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px 20px;
+    .canvas-container {
+        touch-action: none;
+        user-select: none;
     }
     
+    /* Sound toggle */
     .sound-toggle {
         bottom: 20px;
         left: 20px;
+        width: 50px;
+        height: 50px;
+        min-height: 48px;
+    }
+    
+    /* Quiz section */
+    .quiz-section {
+        padding: 60px 5%;
     }
     
     .quiz-container {
-        padding: 30px;
+        padding: 25px 20px;
     }
     
     .quiz-title {
+        font-size: 1.8rem;
+    }
+    
+    .quiz-subtitle {
+        font-size: 1rem;
+    }
+    
+    .question-text {
+        font-size: 1.2rem;
+    }
+    
+    .option-btn {
+        padding: 16px 20px;
+        font-size: 1rem;
+        min-height: 52px;
+    }
+    
+    .quiz-btn {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        min-height: 44px;
+    }
+    
+    .question-indicator {
+        font-size: 0.9rem;
+    }
+    
+    /* Results */
+    .results-title {
         font-size: 2rem;
     }
     
+    .score-display {
+        font-size: 3.5rem;
+    }
+    
+    .results-message {
+        font-size: 1.1rem;
+    }
+    
+    /* Genetics and comparison sections */
+    .genetics-section,
+    .comparison-section {
+        padding: 60px 5%;
+    }
+    
     .section-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 40px;
+    }
+    
+    .genetics-grid,
+    .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
     
     .genetics-card,
     .comparison-card {
-        padding: 25px;
+        padding: 25px 20px;
     }
     
     .genetics-icon {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
     
     .genetics-card-title,
     .comparison-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     
     .genetics-content h4,
     .comparison-item h4 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+    
+    .genetics-content p,
+    .comparison-item p,
+    .comparison-item ul li {
+        font-size: 0.95rem;
     }
     
     .stat-number {
         font-size: 2rem;
     }
+    
+    .stat-label {
+        font-size: 0.85rem;
+    }
+    
+    .genetics-summary,
+    .comparison-summary {
+        padding: 25px 20px;
+    }
+    
+    .genetics-summary h3,
+    .comparison-summary h3 {
+        font-size: 1.5rem;
+    }
+    
+    .genetics-summary p,
+    .comparison-summary p {
+        font-size: 1rem;
+    }
+    
+    /* Popup improvements */
+    .popup-content {
+        width: 95%;
+        padding: 30px 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .popup-content h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .popup-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+    
+    .popup-close {
+        width: 35px;
+        height: 35px;
+        font-size: 1.3rem;
+    }
+    
+    /* Hover label adjustments for mobile */
+    .hover-label {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        max-width: 80%;
+    }
 }
+
+/* ============================================================================
+   RESPONSIVE DESIGN - EXTRA SMALL DEVICES
+   ============================================================================ */
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .phase-title {
+        font-size: 1.5rem;
+    }
+    
+    .quiz-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.7rem;
+    }
+    
+    .pmat-title {
+        font-size: 1.5rem;
+    }
+    
+    .phase-visual,
+    .hero-visual {
+        height: 300px;
+    }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
 
 .hidden {
     display: none !important;
 }
 
+/* ============================================================================
+   SCROLL BEHAVIOR & OPTIMIZATIONS
+   ============================================================================ */
+
 /* Smooth Scrolling */
 html {
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Custom Scrollbar */
+/* Prevent overscroll bounce on mobile */
+html, body {
+    overscroll-behavior-y: contain;
+}
+
+/* Improve text rendering on mobile */
+@media (max-width: 768px) {
+    * {
+        text-rendering: optimizeLegibility;
+        -webkit-text-size-adjust: 100%;
+    }
+}
+
+/* ============================================================================
+   CUSTOM SCROLLBAR
+   ============================================================================ */
+
 ::-webkit-scrollbar {
     width: 10px;
 }

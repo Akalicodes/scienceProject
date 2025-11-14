@@ -360,9 +360,17 @@ function setupScene(containerId) {
     );
     camera.position.z = 25;
     
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // Optimize for mobile devices
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const pixelRatio = isMobile ? Math.min(window.devicePixelRatio, 2) : window.devicePixelRatio;
+    
+    const renderer = new THREE.WebGLRenderer({ 
+        antialias: !isMobile, // Disable antialiasing on mobile for better performance
+        alpha: true,
+        powerPreference: isMobile ? 'low-power' : 'high-performance'
+    });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(pixelRatio);
     container.appendChild(renderer.domElement);
     
     // Lighting
@@ -385,7 +393,8 @@ function setupScene(containerId) {
         autoRotate: true,
         isAnimating: false,
         hoveredObject: null,
-        hoverLabel: null
+        hoverLabel: null,
+        isMobile: isMobile
     };
 }
 
@@ -416,10 +425,11 @@ function startAnimation(sceneData) {
     }
 }
 
-// Enable mouse controls with hover detection
+// Enable mouse and touch controls with hover detection
 function enableControls(sceneData) {
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
+    let previousTouchDistance = 0;
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     
@@ -430,6 +440,91 @@ function enableControls(sceneData) {
     sceneData.container.appendChild(hoverLabel);
     sceneData.hoverLabel = hoverLabel;
     
+    // Show mobile hint on first touch (only once per session)
+    if (sceneData.isMobile && !sessionStorage.getItem('meiosis_mobile_hint_shown')) {
+        const mobileHint = document.createElement('div');
+        mobileHint.className = 'mobile-3d-hint';
+        mobileHint.textContent = '👆 Drag to rotate • 🤏 Pinch to zoom';
+        sceneData.container.appendChild(mobileHint);
+        
+        setTimeout(() => {
+            mobileHint.remove();
+        }, 4000);
+        
+        sessionStorage.setItem('meiosis_mobile_hint_shown', 'true');
+    }
+    
+    // Helper function to get position from event (works for mouse and touch)
+    function getEventPosition(e) {
+        if (e.touches && e.touches.length > 0) {
+            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+    }
+    
+    // Helper function for hover detection
+    function checkHover(clientX, clientY) {
+        const rect = sceneData.container.getBoundingClientRect();
+        mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+        
+        raycaster.setFromCamera(mouse, sceneData.camera);
+        const intersects = raycaster.intersectObjects(sceneData.scene.children, true);
+        
+        // Reset previous hover
+        if (sceneData.hoveredObject) {
+            if (sceneData.hoveredObject.material && sceneData.hoveredObject.material.emissive) {
+                sceneData.hoveredObject.material.emissiveIntensity = 0.3;
+            }
+            sceneData.hoveredObject = null;
+        }
+        
+        // Find first valid object
+        let found = false;
+        for (let i = 0; i < intersects.length; i++) {
+            const object = intersects[i].object;
+            const userData = object.userData || {};
+            
+            // Skip if no type defined or if it's a membrane
+            if (!userData.type || userData.type === 'membrane') continue;
+            
+            // Get label text based on userData type
+            const labelMap = {
+                'chromatid': '🧬 Chromatid (Chromosome Arm)',
+                'centromere': '🔵 Centromere (Connection Point)',
+                'chromosome': '🧬 Chromosome',
+                'chromatin': '🔬 Chromatin (Unwound DNA)',
+                'spindle': '🕸️ Spindle Fiber (Pulls Chromosomes)',
+                'crossover': '✨ Crossover Point (DNA Swap)',
+                'centriole': '⚙️ Centriole (Organizes Spindle)',
+                'nucleus': '🫧 Nuclear Envelope'
+            };
+            
+            const labelText = labelMap[userData.type];
+            
+            if (labelText) {
+                // Highlight objects with emissive materials (chromosomes)
+                if (object.material && object.material.emissive) {
+                    sceneData.hoveredObject = object;
+                    object.material.emissiveIntensity = 0.8;
+                }
+                
+                // Show label
+                hoverLabel.textContent = labelText;
+                hoverLabel.style.display = 'block';
+                hoverLabel.style.left = (clientX - rect.left + 15) + 'px';
+                hoverLabel.style.top = (clientY - rect.top + 15) + 'px';
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            hoverLabel.style.display = 'none';
+        }
+    }
+    
+    // Mouse events
     sceneData.container.addEventListener('mousedown', () => {
         isDragging = true;
     });
@@ -443,64 +538,7 @@ function enableControls(sceneData) {
             sceneData.scene.rotation.y += deltaX * 0.01;
             sceneData.scene.rotation.x += deltaY * 0.01;
         } else {
-            // Hover detection
-            mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-            
-            raycaster.setFromCamera(mouse, sceneData.camera);
-            const intersects = raycaster.intersectObjects(sceneData.scene.children, true);
-            
-            // Reset previous hover
-            if (sceneData.hoveredObject) {
-                if (sceneData.hoveredObject.material && sceneData.hoveredObject.material.emissive) {
-                    sceneData.hoveredObject.material.emissiveIntensity = 0.3;
-                }
-                sceneData.hoveredObject = null;
-            }
-            
-            // Find first valid object
-            let found = false;
-            for (let i = 0; i < intersects.length; i++) {
-                const object = intersects[i].object;
-                const userData = object.userData || {};
-                
-                // Skip if no type defined or if it's a membrane
-                if (!userData.type || userData.type === 'membrane') continue;
-                
-                // Get label text based on userData type
-                const labelMap = {
-                    'chromatid': '🧬 Chromatid (Chromosome Arm)',
-                    'centromere': '🔵 Centromere (Connection Point)',
-                    'chromosome': '🧬 Chromosome',
-                    'chromatin': '🔬 Chromatin (Unwound DNA)',
-                    'spindle': '🕸️ Spindle Fiber (Pulls Chromosomes)',
-                    'crossover': '✨ Crossover Point (DNA Swap)',
-                    'centriole': '⚙️ Centriole (Organizes Spindle)',
-                    'nucleus': '🫧 Nuclear Envelope'
-                };
-                
-                const labelText = labelMap[userData.type];
-                
-                if (labelText) {
-                    // Highlight objects with emissive materials (chromosomes)
-                    if (object.material && object.material.emissive) {
-                        sceneData.hoveredObject = object;
-                        object.material.emissiveIntensity = 0.8;
-                    }
-                    
-                    // Show label
-                    hoverLabel.textContent = labelText;
-                    hoverLabel.style.display = 'block';
-                    hoverLabel.style.left = (e.clientX - rect.left + 15) + 'px';
-                    hoverLabel.style.top = (e.clientY - rect.top + 15) + 'px';
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (!found) {
-                hoverLabel.style.display = 'none';
-            }
+            checkHover(e.clientX, e.clientY);
         }
         
         previousMousePosition = { x: e.clientX, y: e.clientY };
@@ -521,12 +559,76 @@ function enableControls(sceneData) {
         }
     });
     
+    // Touch events for mobile
+    sceneData.container.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isDragging = true;
+        const pos = getEventPosition(e);
+        previousMousePosition = pos;
+        
+        // Initialize pinch zoom
+        if (e.touches.length === 2) {
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            previousTouchDistance = Math.sqrt(dx * dx + dy * dy);
+        }
+    }, { passive: false });
+    
+    sceneData.container.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        
+        if (e.touches.length === 1) {
+            // Single finger - rotate
+            const pos = getEventPosition(e);
+            if (isDragging) {
+                const deltaX = pos.x - previousMousePosition.x;
+                const deltaY = pos.y - previousMousePosition.y;
+                sceneData.scene.rotation.y += deltaX * 0.01;
+                sceneData.scene.rotation.x += deltaY * 0.01;
+            }
+            previousMousePosition = pos;
+            
+            // Show hover on touch
+            checkHover(pos.x, pos.y);
+        } else if (e.touches.length === 2) {
+            // Two fingers - pinch zoom
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (previousTouchDistance > 0) {
+                const delta = previousTouchDistance - distance;
+                sceneData.camera.position.z += delta * 0.05;
+                sceneData.camera.position.z = Math.max(10, Math.min(40, sceneData.camera.position.z));
+            }
+            
+            previousTouchDistance = distance;
+        }
+    }, { passive: false });
+    
+    sceneData.container.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        isDragging = false;
+        previousTouchDistance = 0;
+        
+        // Hide label after a delay on touch end
+        setTimeout(() => {
+            if (hoverLabel) {
+                hoverLabel.style.display = 'none';
+            }
+            if (sceneData.hoveredObject && sceneData.hoveredObject.material && sceneData.hoveredObject.material.emissive) {
+                sceneData.hoveredObject.material.emissiveIntensity = 0.3;
+                sceneData.hoveredObject = null;
+            }
+        }, 1000);
+    }, { passive: false });
+    
     // Zoom with mouse wheel
     sceneData.container.addEventListener('wheel', (e) => {
         e.preventDefault();
         sceneData.camera.position.z += e.deltaY * 0.01;
         sceneData.camera.position.z = Math.max(10, Math.min(40, sceneData.camera.position.z));
-    });
+    }, { passive: false });
 }
 
 // Scene Creation Functions

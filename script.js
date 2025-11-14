@@ -1,14 +1,30 @@
-// State Management
+/**
+ * MEIOSIS EXPLORER - Interactive 3D Educational Application
+ * Main JavaScript file handling UI interactions, animations, and quiz functionality
+ */
+
+// ============================================================================
+// STATE MANAGEMENT
+// ============================================================================
+
 let currentPhase = 0;
 let soundEnabled = true;
 let currentQuestion = 0;
 let userAnswers = [];
 let quizStarted = false;
 
-// Audio Context for Sound Effects
+// ============================================================================
+// AUDIO SYSTEM
+// ============================================================================
+
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-// Sound Effects
+/**
+ * Plays a sound effect with specified parameters
+ * @param {number} frequency - Sound frequency in Hz
+ * @param {number} duration - Duration in seconds
+ * @param {string} type - Oscillator type (sine, square, sawtooth, triangle)
+ */
 function playSound(frequency, duration, type = 'sine') {
     if (!soundEnabled) return;
     
@@ -42,7 +58,13 @@ function playErrorSound() {
     playSound(200, 0.3, 'sawtooth');
 }
 
-// Scroll Progress
+// ============================================================================
+// SCROLL PROGRESS & PHASE TRACKING
+// ============================================================================
+
+/**
+ * Updates the progress bar based on scroll position
+ */
 function updateProgress() {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight - windowHeight;
@@ -52,7 +74,9 @@ function updateProgress() {
     document.querySelector('.progress-fill').style.width = `${progress}%`;
 }
 
-// Phase Detection
+/**
+ * Detects which phase section is currently in view
+ */
 function detectCurrentPhase() {
     const sections = document.querySelectorAll('.phase-section');
     const scrollPosition = window.scrollY + window.innerHeight / 2;
@@ -68,7 +92,10 @@ function detectCurrentPhase() {
     });
 }
 
-// Intersection Observer for Phase Animations
+// ============================================================================
+// INTERSECTION OBSERVER FOR ANIMATIONS
+// ============================================================================
+
 const observerOptions = {
     threshold: 0.2,
     rootMargin: '0px'
@@ -82,18 +109,24 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Initialize Observers
+// Initialize observers for all phase sections
 document.querySelectorAll('.phase-section').forEach(section => {
     observer.observe(section);
 });
 
-// Scroll Event
+// ============================================================================
+// SCROLL EVENT HANDLER
+// ============================================================================
+
 window.addEventListener('scroll', () => {
     updateProgress();
     detectCurrentPhase();
 });
 
-// Navigation Functions
+// ============================================================================
+// NAVIGATION FUNCTIONS
+// ============================================================================
+
 function scrollToPhases() {
     playClickSound();
     document.querySelector('#phases').scrollIntoView({ behavior: 'smooth' });
@@ -104,14 +137,56 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Sound Toggle
+// ============================================================================
+// SOUND TOGGLE
+// ============================================================================
+
 document.getElementById('sound-toggle').addEventListener('click', function() {
     soundEnabled = !soundEnabled;
     this.classList.toggle('muted');
     playClickSound();
 });
 
-// Quiz Data
+// ============================================================================
+// MOBILE MENU FUNCTIONALITY
+// ============================================================================
+
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const navLinks = document.getElementById('nav-links');
+const menuIcon = document.getElementById('menu-icon');
+
+if (mobileMenuToggle) {
+    // Toggle menu on button click
+    mobileMenuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        menuIcon.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        playClickSound();
+    });
+
+    // Close menu when clicking a navigation link
+    const navLinksElements = navLinks.querySelectorAll('a');
+    navLinksElements.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            menuIcon.textContent = '☰';
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!navLinks.contains(e.target) && 
+            !mobileMenuToggle.contains(e.target) && 
+            navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            menuIcon.textContent = '☰';
+        }
+    });
+}
+
+// ============================================================================
+// QUIZ DATA
+// ============================================================================
+
 const quizQuestions = [
     {
         question: "What is the main purpose of meiosis?",
@@ -225,7 +300,13 @@ const quizQuestions = [
     }
 ];
 
-// Quiz Functions
+// ============================================================================
+// QUIZ FUNCTIONALITY
+// ============================================================================
+
+/**
+ * Initializes the quiz from the beginning
+ */
 function startQuiz() {
     currentQuestion = 0;
     userAnswers = [];
@@ -234,6 +315,9 @@ function startQuiz() {
     displayQuestion();
 }
 
+/**
+ * Displays the current question and its options
+ */
 function displayQuestion() {
     const quizContent = document.getElementById('quiz-content');
     const question = quizQuestions[currentQuestion];
@@ -253,33 +337,36 @@ function displayQuestion() {
     
     quizContent.innerHTML = html;
     
-    // Update navigation
+    // Update navigation controls
     document.getElementById('question-indicator').textContent = 
         `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
     
     document.getElementById('prev-btn').disabled = currentQuestion === 0;
-    
-    // Enable next button only if answer is selected
     document.getElementById('next-btn').disabled = userAnswers[currentQuestion] === undefined;
     
+    // Update button text for last question
     if (currentQuestion === quizQuestions.length - 1) {
         document.getElementById('next-btn').textContent = 'Submit';
     } else {
         document.getElementById('next-btn').textContent = 'Next';
     }
     
-    // Restore previous answer if exists
+    // Restore previous answer if it exists
     if (userAnswers[currentQuestion] !== undefined) {
         const buttons = document.querySelectorAll('.option-btn');
         buttons[userAnswers[currentQuestion]].classList.add('selected');
     }
 }
 
+/**
+ * Handles answer selection for current question
+ * @param {number} index - Index of the selected option
+ */
 function selectAnswer(index) {
     playClickSound();
     userAnswers[currentQuestion] = index;
     
-    // Update UI
+    // Update UI to show selection
     document.querySelectorAll('.option-btn').forEach((btn, i) => {
         btn.classList.remove('selected');
         if (i === index) {
@@ -291,6 +378,9 @@ function selectAnswer(index) {
     document.getElementById('next-btn').disabled = false;
 }
 
+/**
+ * Advances to the next question or submits quiz if on last question
+ */
 function nextQuestion() {
     playClickSound();
     
@@ -298,11 +388,13 @@ function nextQuestion() {
         currentQuestion++;
         displayQuestion();
     } else {
-        // Submit quiz
         showResults();
     }
 }
 
+/**
+ * Goes back to the previous question
+ */
 function previousQuestion() {
     playClickSound();
     
@@ -312,23 +404,27 @@ function previousQuestion() {
     }
 }
 
+/**
+ * Calculates score and displays quiz results
+ */
 function showResults() {
-    // Calculate score
     let score = 0;
+    
+    // Calculate the score
     quizQuestions.forEach((question, index) => {
         if (userAnswers[index] === question.correct) {
             score++;
         }
     });
     
-    // Play sound
+    // Play appropriate sound
     if (score >= quizQuestions.length * 0.7) {
         playSuccessSound();
     } else {
         playErrorSound();
     }
     
-    // Update UI
+    // Hide quiz content and show results
     document.getElementById('quiz-content').style.display = 'none';
     document.querySelector('.quiz-navigation').style.display = 'none';
     
@@ -337,6 +433,7 @@ function showResults() {
     
     document.getElementById('score-value').textContent = score;
     
+    // Generate personalized message based on score
     let message = '';
     const percentage = (score / quizQuestions.length) * 100;
     
@@ -353,6 +450,9 @@ function showResults() {
     document.getElementById('results-message').textContent = message;
 }
 
+/**
+ * Resets and restarts the quiz
+ */
 function restartQuiz() {
     playClickSound();
     document.getElementById('quiz-content').style.display = 'block';
@@ -360,208 +460,17 @@ function restartQuiz() {
     startQuiz();
 }
 
-// Popup Functions
-const popupContent = {
-    interphase: {
-        title: "Interphase: Getting Ready",
-        content: `
-            <p>Before meiosis starts, the cell needs to get ready. Here's what happens:</p>
-            
-            <p><strong>DNA Copying:</strong> The cell makes a copy of all its DNA. Each chromosome gets a twin copy called a sister chromatid. They stick together at the center (the centromere). This means each new cell will get complete instructions!</p>
-            
-            <p><strong>Growing Bigger:</strong> The cell gets larger and makes proteins it will need. It builds all the machinery to move chromosomes around and split the cell.</p>
-            
-            <p><strong>Making Energy:</strong> The cell stores up energy (ATP) because meiosis takes a LOT of work!</p>
-            
-            <p>💡 <strong>Cool Fact:</strong> DNA copying is super accurate! It makes less than one mistake per BILLION letters copied!</p>
-        `
-    },
-    prophase1: {
-        title: "Prophase I: The DNA Trading Phase",
-        content: `
-            <p>Prophase I is the longest phase of meiosis. This is where your unique genetic mix is created!</p>
-            
-            <p><strong>Pairing Up:</strong> Matching chromosomes (one from mom, one from dad) line up next to each other really close. This is called synapsis. They need to be super close for the next step to work.</p>
-            
-            <p><strong>Crossing Over (The Cool Part!):</strong> While paired up, the chromosomes swap pieces of DNA! It's like trading parts of a recipe. This mixes mom's and dad's genes together in new ways. That's why you're unique!</p>
-            
-            <p><strong>Getting Visible:</strong> Chromosomes coil up tight so you can see them under a microscope. The nuclear bubble around them breaks down, and spindle fibers start forming.</p>
-            
-            <p>🧬 <strong>Did You Know?</strong> Usually 2-3 swaps happen per chromosome pair. This creates BILLIONS of possible combinations!</p>
-        `
-    },
-    metaphase1: {
-        title: "Metaphase I: The Lineup",
-        content: `
-            <p>During Metaphase I, the stage is set for the first major separation of chromosomes.</p>
-            
-            <p><strong>Chromosome Alignment:</strong> Homologous chromosome pairs (called bivalents or tetrads) line up along the metaphase plate—an imaginary line in the center of the cell.</p>
-            
-            <p><strong>Random Orientation:</strong> Each pair aligns randomly, with either the maternal or paternal chromosome facing each pole. This random orientation is called independent assortment and is another source of genetic variation.</p>
-            
-            <p><strong>Spindle Attachment:</strong> Spindle fibers from opposite poles attach to the kinetochores at each chromosome's centromere, preparing to pull them apart.</p>
-            
-            <p>🎲 <strong>Amazing Math:</strong> With 23 chromosome pairs in humans, independent assortment alone can produce over 8 million different combinations of chromosomes!</p>
-        `
-    },
-    anaphase1: {
-        title: "Anaphase I: The Great Separation",
-        content: `
-            <p>Anaphase I is where the chromosome number is actually reduced—this is why meiosis is called "reduction division."</p>
-            
-            <p><strong>Homolog Separation:</strong> The spindle fibers shorten, pulling homologous chromosomes apart and toward opposite poles of the cell. Importantly, sister chromatids remain attached to each other.</p>
-            
-            <p><strong>Independent Movement:</strong> Each homologous pair separates independently, ensuring that each pole receives a random mix of maternal and paternal chromosomes.</p>
-            
-            <p><strong>Chromosome Reduction:</strong> This is the critical step where the chromosome number is halved. Each pole now has a haploid number of chromosomes (though each still consists of two chromatids).</p>
-            
-            <p>⚠️ <strong>Important Note:</strong> Errors during this phase (like both homologs going to the same pole) can result in genetic disorders like Down syndrome.</p>
-        `
-    },
-    telophase1: {
-        title: "Telophase I: Reaching the Poles",
-        content: `
-            <p>Telophase I marks the end of the first meiotic division and prepares the cell for the second division.</p>
-            
-            <p><strong>Chromosome Arrival:</strong> The separated homologous chromosomes reach opposite poles of the cell. Each pole now has a haploid set of chromosomes, though each chromosome still consists of two sister chromatids.</p>
-            
-            <p><strong>Nuclear Envelope:</strong> In some organisms, nuclear envelopes reform around each set of chromosomes, creating two nuclei. In others, the cell proceeds directly to Meiosis II.</p>
-            
-            <p><strong>Chromosome Decondensation:</strong> Chromosomes may partially uncoil, though they typically don't return to their fully extended interphase state.</p>
-            
-            <p>🔄 <strong>What's Next?</strong> The cell prepares for Meiosis II, which resembles mitosis but starts with haploid cells!</p>
-        `
-    },
-    cytokinesis1: {
-        title: "Cytokinesis I: Two Cells Emerge",
-        content: `
-            <p>Cytokinesis is the physical division of the cell into two separate daughter cells.</p>
-            
-            <p><strong>Cleavage Furrow:</strong> In animal cells, a ring of contractile proteins forms around the cell's equator and contracts, pinching the cell in two. Plant cells form a cell plate instead.</p>
-            
-            <p><strong>Two Haploid Cells:</strong> The result is two cells, each with half the number of chromosomes as the original cell. However, each chromosome still consists of two sister chromatids joined at the centromere.</p>
-            
-            <p><strong>Preparation for Round Two:</strong> These cells immediately (or after a brief interphase without DNA replication) enter Meiosis II to separate the sister chromatids.</p>
-            
-            <p>🎯 <strong>Key Point:</strong> After Meiosis I, cells are haploid but chromosomes are still duplicated!</p>
-        `
-    },
-    prophase2: {
-        title: "Prophase II: Starting the Second Round",
-        content: `
-            <p>Prophase II initiates the second meiotic division in each of the two cells produced by Meiosis I.</p>
-            
-            <p><strong>New Spindles:</strong> A new spindle apparatus forms in each cell, perpendicular to the original spindle from Meiosis I.</p>
-            
-            <p><strong>Chromosome Condensation:</strong> Chromosomes condense again if they had decondensed. Remember, each chromosome still consists of two sister chromatids.</p>
-            
-            <p><strong>No DNA Replication:</strong> Crucially, there is no S phase before Meiosis II. The DNA that was replicated before Meiosis I will now be separated.</p>
-            
-            <p>💡 <strong>Similarity to Mitosis:</strong> Meiosis II is very similar to mitosis, except it starts with haploid cells!</p>
-        `
-    },
-    metaphase2: {
-        title: "Metaphase II: Aligning for Final Separation",
-        content: `
-            <p>Metaphase II mirrors metaphase of mitosis, with chromosomes aligning at the cell's equator.</p>
-            
-            <p><strong>Individual Alignment:</strong> Unlike Metaphase I where pairs lined up, now individual chromosomes (each consisting of two sister chromatids) align at the metaphase plate.</p>
-            
-            <p><strong>Spindle Attachment:</strong> Spindle fibers from opposite poles attach to the sister chromatids at the kinetochore, preparing to pull them apart.</p>
-            
-            <p><strong>Tension Checkpoint:</strong> The cell checks that all chromosomes are properly attached to spindle fibers before proceeding. This quality control prevents errors in chromosome distribution.</p>
-            
-            <p>✅ <strong>Quality Control:</strong> The spindle checkpoint ensures accurate chromosome segregation!</p>
-        `
-    },
-    anaphase2: {
-        title: "Anaphase II: Sister Chromatids Part Ways",
-        content: `
-            <p>In Anaphase II, sister chromatids finally separate, creating individual chromosomes.</p>
-            
-            <p><strong>Chromatid Separation:</strong> The proteins holding sister chromatids together at the centromere are broken down, allowing them to separate and move to opposite poles.</p>
-            
-            <p><strong>Individual Chromosomes:</strong> Once separated, each chromatid is considered an individual chromosome. Each pole receives one copy of each chromosome.</p>
-            
-            <p><strong>Equal Distribution:</strong> This ensures that each of the four final gametes will receive a complete haploid set of chromosomes.</p>
-            
-            <p>🎉 <strong>Almost Done:</strong> This is the final separation event in meiosis!</p>
-        `
-    },
-    telophase2: {
-        title: "Telophase II & Cytokinesis II: Four Unique Cells!",
-        content: `
-            <p>The grand finale of meiosis produces four unique haploid cells!</p>
-            
-            <p><strong>Nuclear Reformation:</strong> Nuclear envelopes reform around each set of chromosomes at the four poles, creating four nuclei.</p>
-            
-            <p><strong>Chromosome Decondensation:</strong> Chromosomes begin to uncoil and return to their extended interphase state, allowing genes to be expressed.</p>
-            
-            <p><strong>Final Division:</strong> Cytokinesis divides each cell again, resulting in four haploid gametes.</p>
-            
-            <p><strong>Genetic Uniqueness:</strong> Due to crossing over and independent assortment, each of these four cells is genetically unique—no two are alike!</p>
-            
-            <p>🌟 <strong>The Result:</strong> Four gametes (sperm or egg cells) ready for fertilization, each with unique genetic combinations that contribute to the diversity of life!</p>
-            
-            <p>🧬 <strong>Impact:</strong> This genetic diversity is the foundation of evolution and makes each organism unique!</p>
-        `
-    },
-    interkinesis: {
-        title: "Interkinesis: Quick Break Time!",
-        content: `
-            <p>Interkinesis is the short rest between Meiosis I and Meiosis II. Pay attention to what does NOT happen here!</p>
-            
-            <p><strong>NO DNA Copying:</strong> This is super important! Unlike before Meiosis I, the DNA does NOT make copies during this break. If it did, we'd end up with the wrong number of chromosomes in sperm/eggs!</p>
-            
-            <p><strong>What Actually Happens:</strong> The cells just rest. Some organisms skip this completely and go straight to round 2. Others might reform the nuclear bubble temporarily, but chromosomes stay condensed.</p>
-            
-            <p><strong>Chromosome Status:</strong> Each cell has half the chromosomes now (haploid), but each chromosome is still doubled (twin copies stuck together). That's why we need Meiosis II—to split those twins apart!</p>
-            
-            <p><strong>Getting Ready:</strong> The cell might make some proteins for round 2, but mainly it just keeps things the way they are.</p>
-            
-            <p>⚠️ <strong>Remember:</strong> NO DNA copying here! That's the big difference from the first break!</p>
-        `
-    }
-};
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 
-function showPopup(phase) {
-    playClickSound();
-    const popup = document.getElementById('info-popup');
-    const content = popupContent[phase];
-    
-    document.getElementById('popup-body').innerHTML = `
-        <h3>${content.title}</h3>
-        ${content.content}
-    `;
-    
-    popup.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closePopup() {
-    playClickSound();
-    document.getElementById('info-popup').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// Close popup on outside click
-document.getElementById('info-popup').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closePopup();
-    }
-});
-
-// Initialize Quiz on load
+// Start quiz when page loads
 window.addEventListener('load', () => {
     startQuiz();
 });
 
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !document.getElementById('info-popup').classList.contains('hidden')) {
-        closePopup();
-    }
-});
+// ============================================================================
+// CONSOLE MESSAGE
+// ============================================================================
 
 console.log('🧬 Meiosis Explorer Loaded! Enjoy your journey through cellular division!');
-
